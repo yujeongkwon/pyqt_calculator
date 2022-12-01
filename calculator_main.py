@@ -10,8 +10,8 @@ class Main(QDialog):
         main_layout = QVBoxLayout()
 
         ### 각 위젯을 배치할 레이아웃을 미리 만들어 둠
-        layout_operation = QHBoxLayout()
-        layout_clear_equal = QHBoxLayout()
+        layout_operation = QGridLayout()
+        layout_clear_equal = QGridLayout()
         layout_number = QGridLayout()
         layout_equation_solution = QFormLayout()
 
@@ -25,7 +25,7 @@ class Main(QDialog):
         layout_equation_solution.addRow(label_equation, self.equation)
         layout_equation_solution.addRow(label_solution, self.solution)
 
-        ### 사칙연상 버튼 생성
+        ### 사칙연산 버튼 생성
         button_plus = QPushButton("+")
         button_minus = QPushButton("-")
         button_product = QPushButton("x")
