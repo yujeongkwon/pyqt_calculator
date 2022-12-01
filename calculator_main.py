@@ -108,8 +108,11 @@ class Main(QDialog):
 
     def button_operation_clicked(self, operation):
         equation = self.equation
-        self.equation = calculator(equation)
-        self.equation += operation
+        if equation[-1].isdigit():
+            self.equation = calculator(equation)
+            self.equation += operation
+        else:
+            self.equation = self.equation[:-1] + operation
         self.lineEdit.setText("")
 
     def button_equal_clicked(self):
