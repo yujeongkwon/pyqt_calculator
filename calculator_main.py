@@ -116,7 +116,10 @@ class Main(QDialog):
         self.lineEdit.setText("")
 
     def button_equal_clicked(self):
-        self.lineEdit.setText(str(calculator(self.equation)))
+        if self.equation[-1].isdigit():
+            self.lineEdit.setText(str(calculator(self.equation)))
+        else:
+            self.lineEdit.setText("error")
 
     def button_clear_clicked(self):
         self.equation=""
