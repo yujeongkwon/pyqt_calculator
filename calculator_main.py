@@ -109,7 +109,7 @@ class Main(QDialog):
     def button_operation_clicked(self, operation):
         equation = self.equation
         if equation[-1].isdigit():
-            self.equation = calculator(equation)
+            self.equation = str(calculator(equation))
             self.equation += operation
         else:
             self.equation = self.equation[:-1] + operation
@@ -131,7 +131,19 @@ class Main(QDialog):
         self.lineEdit.setText(equation)
 
 def calculator(equation):
-    return str(eval(equation))
+    if not equation.isdigit():
+        index = 0
+        while equation[index].isdigit() or equation[index] == '.':
+            index += 1
+        if equation[index] == '+':
+            return float(equation[:index]) + float(equation[index+1:])
+        if equation[index] == '-':
+            return float(equation[:index]) - float(equation[index+1:])
+        if equation[index] == '*':
+            return float(equation[:index]) * float(equation[index+1:])
+        if equation[index] == '/':
+            return float(equation[:index]) / float(equation[index+1:])
+    return equation
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
