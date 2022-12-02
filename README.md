@@ -5,11 +5,9 @@ This calculator is based on studyingrabbit's work (https://studyingrabbit.tistor
 
 **This repository exists for opensource software lecture in Pukyong National University at Fall 2022.**
 
-### Brief program description
- 최종 계산기 화면
+### The final screen
  
-![image](https://user-images.githubusercontent.com/87534067/205309535-2c465aec-5622-4301-926c-a3179e23b94a.png)
-
+![image](https://user-images.githubusercontent.com/87534067/205315406-979cc4f3-7ad2-4e79-9f95-a09cca363fe2.png)
 
 ## Requirements
 PyQt5 module
