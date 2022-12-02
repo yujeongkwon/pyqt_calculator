@@ -15,6 +15,7 @@ class Main(QDialog):
 
         ### 수식 입력과 답 출력을 위한 LineEdit 생성
         self.lineEdit = QLineEdit("")
+        self.equation=""
 
         ### layout_lineEdit 레이아웃에 LineEdit위젯을 추가
         layout_lineEdit.addRow(self.lineEdit)
@@ -97,29 +98,52 @@ class Main(QDialog):
     #################
     ### functions ###
     #################
+
+
     def number_button_clicked(self, num):
+        self.equation += str(num)
         equation = self.lineEdit.text()
         equation += str(num)
         self.lineEdit.setText(equation)
 
     def button_operation_clicked(self, operation):
-        equation = self.lineEdit.text()
-        equation += operation
-        self.lineEdit.setText(equation)
-
-    def button_equal_clicked(self):
-        equation = self.lineEdit.text()
-        solution = eval(equation)
-        self.lineEdit.setText(str(solution))
-
-    def button_clear_clicked(self):
+        equation = self.equation
+        if equation[-1].isdigit():
+            self.equation = str(calculator(equation))
+            self.equation += operation
+        else:
+            self.equation = self.equation[:-1] + operation
         self.lineEdit.setText("")
 
+    def button_equal_clicked(self):
+        if self.equation[-1].isdigit():
+            self.lineEdit.setText(str(calculator(self.equation)))
+        else:
+            self.lineEdit.setText("error")
+
+    def button_clear_clicked(self):
+        self.equation=""
+        self.lineEdit.setText("")
 
     def button_backspace_clicked(self):
         equation = self.lineEdit.text()
         equation = equation[:-1]
         self.lineEdit.setText(equation)
+
+def calculator(equation):
+    if not equation.isdigit():
+        index = 0
+        while equation[index].isdigit() or equation[index] == '.':
+            index += 1
+        if equation[index] == '+':
+            return float(equation[:index]) + float(equation[index+1:])
+        if equation[index] == '-':
+            return float(equation[:index]) - float(equation[index+1:])
+        if equation[index] == '*':
+            return float(equation[:index]) * float(equation[index+1:])
+        if equation[index] == '/':
+            return float(equation[:index]) / float(equation[index+1:])
+    return equation
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
