@@ -147,17 +147,20 @@ class Main(QDialog):
 
     def button_inverse_clicked(self):
         equation = self.equation
-        if not isOnlyNumeric(equation):
-            index = search_operator(equation)
-            self.equation = equation[:index+1] + str(1 / float(equation[index+1:]))
-            equation = str(1 / float(equation[index+1:]))
-        else:
-            if len(equation) > 0:
-                self.equation = str(1 / float(equation))
+        if len(equation) > 0 and equation != '0':
+            if not isOnlyNumeric(equation):
+                index = search_operator(equation)
+                self.equation = equation[:index+1] + str(1 / float(equation[index+1:]))
+                self.lineEdit.setText(str(1 / float(equation[index+1:])))
             else:
-                self.equation = "0"
-            equation = self.equation
-        self.lineEdit.setText(equation)
+                self.equation = str(1 / float(equation))
+                self.lineEdit.setText(self.equation)
+        elif len(equation) == 0:
+            self.equation = "0"
+            self.lineEdit.setText(self.equation)
+        else:
+            self.lineEdit.setText("0으로 나눌 수 없습니다. 다른 연산자를 사용해주세요:")
+
 
     def button_square_clicked(self):
         equation = self.equation
@@ -198,8 +201,12 @@ def calculator(equation):
         if equation[index] == '*':
             return float(equation[:index]) * float(equation[index+1:])
         if equation[index] == '/':
+            if equation[-1] == '0':
+                return "0으로 나눌 수 없습니다. 다시 입력해주세요: "
             return float(equation[:index]) / float(equation[index+1:])
         if equation[index] == '%':
+            if equation[-1] == '0':
+                return "0으로 나눌 수 없습니다. 다시 입력해주세요: "
             return float(equation[:index]) % float(equation[index+1:])
     return equation
 
