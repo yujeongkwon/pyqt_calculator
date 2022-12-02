@@ -139,9 +139,9 @@ class Main(QDialog):
         self.lineEdit.setText("")
 
     def button_backspace_clicked(self):
-        equation = self.lineEdit.text()
-        equation = equation[:-1]
-        self.lineEdit.setText(equation)
+        if self.equation[-1].isdigit():
+            self.equation = self.equation[:-1]
+            self.lineEdit.setText(self.lineEdit.text()[:-1])
 
     def button_inverse_clicked(self):
         equation = self.equation
