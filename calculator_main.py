@@ -1,3 +1,4 @@
+import math
 import sys
 from PyQt5.QtWidgets import *
 
@@ -16,7 +17,6 @@ class Main(QDialog):
         ### 수식 입력과 답 출력을 위한 LineEdit 생성
         self.lineEdit = QLineEdit("")
         self.equation=""
-
         ### layout_lineEdit 레이아웃에 LineEdit위젯을 추가
         layout_lineEdit.addRow(self.lineEdit)
 
@@ -131,7 +131,7 @@ class Main(QDialog):
 
     def button_clearEntry_clicked(self):
         equation = self.equation
-        if not equation.isdigit():
+        if not equation.replace('.','').isdigit():
             index = search_operator(equation)
             self.equation = equation[:index+1]
         else:
@@ -145,7 +145,7 @@ class Main(QDialog):
 
     def button_inverse_clicked(self):
         equation = self.equation
-        if not equation.isdigit():
+        if not equation.replace('.','').isdigit():
             index = search_operator(equation)
             self.equation = equation[:index+1] + str(1 / float(equation[index+1:]))
             equation = str(1 / float(equation[index+1:]))
@@ -157,8 +157,10 @@ class Main(QDialog):
             equation = self.equation
         self.lineEdit.setText(equation)
 
+
+
 def calculator(equation):
-    if not equation.isdigit():
+    if not equation.replace('.','').isdigit():
         index = search_operator(equation)
         if equation[index] == '+':
             return float(equation[:index]) + float(equation[index+1:])
