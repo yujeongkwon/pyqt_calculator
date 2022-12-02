@@ -44,6 +44,7 @@ class Main(QDialog):
         button_clearEntry.clicked.connect(self.button_clearEntry_clicked)
         button_inverse.clicked.connect(self.button_inverse_clicked)
         button_square.clicked.connect(self.button_square_clicked)
+        button_squareRoot.clicked.connect(self.button_squareRoot_clicked)
 
         ### 사칙연산 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_plus,4,3)
@@ -141,9 +142,8 @@ class Main(QDialog):
         self.lineEdit.setText("")
 
     def button_backspace_clicked(self):
-        if self.equation[-1].isdigit():
-            self.equation = self.equation[:-1]
-            self.lineEdit.setText(self.lineEdit.text()[:-1])
+        self.equation = self.equation[:-1]
+        self.lineEdit.setText(self.lineEdit.text()[:-1])
 
     def button_inverse_clicked(self):
         equation = self.equation
@@ -168,6 +168,20 @@ class Main(QDialog):
         else:
             if len(equation) > 0:
                 self.equation = str(math.pow(float(equation), 2))
+            else:
+                self.equation = "0"
+            equation = self.equation
+        self.lineEdit.setText(equation)
+
+    def button_squareRoot_clicked(self):
+        equation = self.equation
+        if not isOnlyNumeric(equation):
+            index = search_operator(equation)
+            self.equation = equation[:index+1] + str(math.sqrt(float(equation[index+1:])))
+            equation = str(math.sqrt(float(equation[index+1:])))
+        else:
+            if len(equation) > 0:
+                self.equation = str(math.sqrt(float(equation)))
             else:
                 self.equation = "0"
             equation = self.equation
