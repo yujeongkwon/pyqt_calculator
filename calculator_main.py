@@ -1,3 +1,4 @@
+import math
 import sys
 from PyQt5.QtWidgets import *
 
@@ -32,12 +33,25 @@ class Main(QDialog):
         button_inverse = QPushButton("1/x")
         button_square = QPushButton("x²")
         button_squareRoot = QPushButton("²√x")
+        ### =, clear, backspace 버튼 생성
+        button_equal = QPushButton("=")
+        button_backspace = QPushButton("Backspace")
 
-        ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
+        ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식에 추가될 수 있도록 시그널 설정
         button_plus.clicked.connect(lambda state, operation = "+": self.button_operation_clicked(operation))
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
         button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
+        ### 추가 연산 버튼을 클릭했을 때, 각 추가연산 부호가 작동할수 있도록 시그널 설정
+        button_rest.clicked.connect(lambda state, operation = "%": self.button_operation_clicked(operation))
+        button_clearEntry.clicked.connect(self.button_clearEntry_clicked)
+        button_inverse.clicked.connect(self.button_inverse_clicked)
+        button_square.clicked.connect(self.button_square_clicked)
+        button_squareRoot.clicked.connect(self.button_squareRoot_clicked)
+        ### =, clear, backspace 버튼 클릭 시 시그널 설정
+        button_equal.clicked.connect(self.button_equal_clicked)
+        button_clear.clicked.connect(self.button_clear_clicked)
+        button_backspace.clicked.connect(self.button_backspace_clicked)
 
         ### 사칙연산 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_plus,4,3)
@@ -51,16 +65,6 @@ class Main(QDialog):
         layout_button.addWidget(button_inverse, 1, 0)
         layout_button.addWidget(button_square, 1, 1)
         layout_button.addWidget(button_squareRoot, 1, 2)
-
-        ### =, clear, backspace 버튼 생성
-        button_equal = QPushButton("=")
-        button_backspace = QPushButton("Backspace")
-
-        ### =, clear, backspace 버튼 클릭 시 시그널 설정
-        button_equal.clicked.connect(self.button_equal_clicked)
-        button_clear.clicked.connect(self.button_clear_clicked)
-        button_backspace.clicked.connect(self.button_backspace_clicked)
-
         ### =, clear, backspace 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_clear,0,2)
         layout_button.addWidget(button_backspace,0,3)
@@ -125,25 +129,100 @@ class Main(QDialog):
         self.equation=""
         self.lineEdit.setText("")
 
+    def button_clearEntry_clicked(self):
+        equation = self.equation
+        if not isOnlyNumeric(equation):
+            index = search_operator(equation)
+            self.equation = equation[:index+1]
+        else:
+            self.equation = ""
+        self.lineEdit.setText("")
+
     def button_backspace_clicked(self):
-        equation = self.lineEdit.text()
-        equation = equation[:-1]
+        self.equation = self.equation[:-1]
+        self.lineEdit.setText(self.lineEdit.text()[:-1])
+
+    def button_inverse_clicked(self):
+        equation = self.equation
+        if len(equation) > 0 and equation != '0':
+            if not isOnlyNumeric(equation):
+                index = search_operator(equation)
+                self.equation = equation[:index+1] + str(1 / float(equation[index+1:]))
+                self.lineEdit.setText(str(1 / float(equation[index+1:])))
+            else:
+                self.equation = str(1 / float(equation))
+                self.lineEdit.setText(self.equation)
+        elif len(equation) == 0:
+            self.equation = "0"
+            self.lineEdit.setText(self.equation)
+        else:
+            self.lineEdit.setText("0으로 나눌 수 없습니다. 다른 연산자를 사용해주세요:")
+
+
+    def button_square_clicked(self):
+        equation = self.equation
+        if not isOnlyNumeric(equation):
+            index = search_operator(equation)
+            self.equation = equation[:index+1] + str(math.pow(float(equation[index+1:]), 2))
+            equation = str(math.pow(float(equation[index+1:]), 2))
+        else:
+            if len(equation) > 0:
+                self.equation = str(math.pow(float(equation), 2))
+            else:
+                self.equation = "0"
+            equation = self.equation
+        self.lineEdit.setText(equation)
+
+    def button_squareRoot_clicked(self):
+        equation = self.equation
+        if len(equation) > 0:
+            if not isOnlyNumeric(equation):
+                index = search_operator(equation)
+                self.equation = equation[:index+1] + str(math.sqrt(float(equation[index+1:])))
+                equation = str(math.sqrt(float(equation[index+1:])))
+            else:
+                self.equation = str(math.sqrt(float(equation)))
+                equation = self.equation
+        else:
+            self.equation = "0"
+            equation = self.equation
         self.lineEdit.setText(equation)
 
 def calculator(equation):
-    if not equation.isdigit():
-        index = 0
-        while equation[index].isdigit() or equation[index] == '.':
-            index += 1
+    if not isOnlyNumeric(equation):
+        index = search_operator(equation)
         if equation[index] == '+':
             return float(equation[:index]) + float(equation[index+1:])
         if equation[index] == '-':
             return float(equation[:index]) - float(equation[index+1:])
         if equation[index] == '*':
             return float(equation[:index]) * float(equation[index+1:])
-        if equation[index] == '/':
-            return float(equation[:index]) / float(equation[index+1:])
+        else:
+            if equation[-1] == '0':
+                return "0으로 나눌 수 없습니다. 다시 입력해주세요: "
+            if equation[index] == '/':
+                return float(equation[:index]) / float(equation[index+1:])
+            if equation[index] == '%':
+                return float(equation[:index]) % float(equation[index+1:])
     return equation
+
+def search_operator(equation):
+    index = 0
+    if equation[0] == '-':
+        index = 1
+    while equation[index].isdigit() or equation[index] == '.':
+        index += 1
+    return index
+
+def isOnlyNumeric(equation):
+    operator = ["+","-","*","/","%"]
+    if equation[0] == '-':
+        equation = equation[1:]
+
+    for exp in operator:
+        if exp in equation:
+            return False
+    return True
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
