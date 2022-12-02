@@ -175,15 +175,16 @@ class Main(QDialog):
 
     def button_squareRoot_clicked(self):
         equation = self.equation
-        if not isOnlyNumeric(equation):
-            index = search_operator(equation)
-            self.equation = equation[:index+1] + str(math.sqrt(float(equation[index+1:])))
-            equation = str(math.sqrt(float(equation[index+1:])))
-        else:
-            if len(equation) > 0:
-                self.equation = str(math.sqrt(float(equation)))
+        if len(equation) > 0:
+            if not isOnlyNumeric(equation):
+                index = search_operator(equation)
+                self.equation = equation[:index+1] + str(math.sqrt(float(equation[index+1:])))
+                equation = str(math.sqrt(float(equation[index+1:])))
             else:
-                self.equation = "0"
+                self.equation = str(math.sqrt(float(equation)))
+                equation = self.equation
+        else:
+            self.equation = "0"
             equation = self.equation
         self.lineEdit.setText(equation)
 
