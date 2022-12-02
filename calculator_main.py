@@ -79,7 +79,7 @@ class Main(QDialog):
                                                        self.number_button_clicked(num))
             if number >0:
                 x,y = divmod(number-1, 3)
-                layout_button.addWidget(number_button_dict[number], x+2, y)
+                layout_button.addWidget(number_button_dict[number], 4-x, y)
             elif number==0:
                 layout_button.addWidget(number_button_dict[number], 5, 1)
 
