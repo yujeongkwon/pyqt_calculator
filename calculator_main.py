@@ -33,6 +33,9 @@ class Main(QDialog):
         button_inverse = QPushButton("1/x")
         button_square = QPushButton("x²")
         button_squareRoot = QPushButton("²√x")
+        ### =, clear, backspace 버튼 생성
+        button_equal = QPushButton("=")
+        button_backspace = QPushButton("Backspace")
 
         ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식에 추가될 수 있도록 시그널 설정
         button_plus.clicked.connect(lambda state, operation = "+": self.button_operation_clicked(operation))
@@ -45,6 +48,10 @@ class Main(QDialog):
         button_inverse.clicked.connect(self.button_inverse_clicked)
         button_square.clicked.connect(self.button_square_clicked)
         button_squareRoot.clicked.connect(self.button_squareRoot_clicked)
+        ### =, clear, backspace 버튼 클릭 시 시그널 설정
+        button_equal.clicked.connect(self.button_equal_clicked)
+        button_clear.clicked.connect(self.button_clear_clicked)
+        button_backspace.clicked.connect(self.button_backspace_clicked)
 
         ### 사칙연산 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_plus,4,3)
@@ -58,16 +65,6 @@ class Main(QDialog):
         layout_button.addWidget(button_inverse, 1, 0)
         layout_button.addWidget(button_square, 1, 1)
         layout_button.addWidget(button_squareRoot, 1, 2)
-
-        ### =, clear, backspace 버튼 생성
-        button_equal = QPushButton("=")
-        button_backspace = QPushButton("Backspace")
-
-        ### =, clear, backspace 버튼 클릭 시 시그널 설정
-        button_equal.clicked.connect(self.button_equal_clicked)
-        button_clear.clicked.connect(self.button_clear_clicked)
-        button_backspace.clicked.connect(self.button_backspace_clicked)
-
         ### =, clear, backspace 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_clear,0,2)
         layout_button.addWidget(button_backspace,0,3)
@@ -200,14 +197,13 @@ def calculator(equation):
             return float(equation[:index]) - float(equation[index+1:])
         if equation[index] == '*':
             return float(equation[:index]) * float(equation[index+1:])
-        if equation[index] == '/':
+        else:
             if equation[-1] == '0':
                 return "0으로 나눌 수 없습니다. 다시 입력해주세요: "
-            return float(equation[:index]) / float(equation[index+1:])
-        if equation[index] == '%':
-            if equation[-1] == '0':
-                return "0으로 나눌 수 없습니다. 다시 입력해주세요: "
-            return float(equation[:index]) % float(equation[index+1:])
+            if equation[index] == '/':
+                return float(equation[:index]) / float(equation[index+1:])
+            if equation[index] == '%':
+                return float(equation[:index]) % float(equation[index+1:])
     return equation
 
 def search_operator(equation):
