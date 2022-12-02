@@ -42,6 +42,7 @@ class Main(QDialog):
         button_rest.clicked.connect(lambda state, operation = "%": self.button_operation_clicked(operation))
         button_clearEntry.clicked.connect(self.button_clearEntry_clicked)
         button_inverse.clicked.connect(self.button_inverse_clicked)
+        button_square.clicked.connect(self.button_square_clicked)
 
         ### 사칙연산 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_plus,4,3)
@@ -157,7 +158,19 @@ class Main(QDialog):
             equation = self.equation
         self.lineEdit.setText(equation)
 
-
+    def button_square_clicked(self):
+        equation = self.equation
+        if not equation.replace('.','').isdigit():
+            index = search_operator(equation)
+            self.equation = equation[:index+1] + str(math.pow(float(equation[index+1:]), 2))
+            equation = str(1 / float(equation[index+1:]))
+        else:
+            if len(equation) > 0:
+                self.equation = str(math.pow(float(equation), 2))
+            else:
+                self.equation = "0"
+            equation = self.equation
+        self.lineEdit.setText(equation)
 
 def calculator(equation):
     if not equation.replace('.','').isdigit():
