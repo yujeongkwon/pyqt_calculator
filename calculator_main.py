@@ -211,7 +211,7 @@ def search_operator(equation):
     return index
 
 def isOnlyNumeric(equation):
-    operator = ["+","-","x","÷","%"]
+    operator = ["+","-","*","/","%"]
     if equation[0] == '-':
         equation = equation[1:]
 
