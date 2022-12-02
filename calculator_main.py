@@ -40,6 +40,8 @@ class Main(QDialog):
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
         ### 추가 연산 버튼을 클릭했을 때, 각 추가연산 부호가 작동할수 있도록 시그널 설정
         button_rest.clicked.connect(lambda state, operation = "%": self.button_operation_clicked(operation))
+        button_clearEntry.clicked.connect(self.button_clearEntry_clicked)
+
 
         ### 사칙연산 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_plus,4,3)
@@ -125,6 +127,17 @@ class Main(QDialog):
 
     def button_clear_clicked(self):
         self.equation=""
+        self.lineEdit.setText("")
+
+    def button_clearEntry_clicked(self):
+        equation = self.equation
+        if not equation.isdigit():
+            index = 0
+            while equation[index].isdigit() or equation[index] == '.':
+                index += 1
+            self.equation = equation[:index+1]
+        else:
+            self.equation = ""
         self.lineEdit.setText("")
 
     def button_backspace_clicked(self):
