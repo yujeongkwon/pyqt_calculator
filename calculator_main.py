@@ -33,11 +33,13 @@ class Main(QDialog):
         button_square = QPushButton("x²")
         button_squareRoot = QPushButton("²√x")
 
-        ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
+        ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식에 추가될 수 있도록 시그널 설정
         button_plus.clicked.connect(lambda state, operation = "+": self.button_operation_clicked(operation))
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
         button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
+        ### 추가 연산 버튼을 클릭했을 때, 각 추가연산 부호가 작동할수 있도록 시그널 설정
+        button_rest.clicked.connect(lambda state, operation = "%": self.button_operation_clicked(operation))
 
         ### 사칙연산 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_plus,4,3)
@@ -143,6 +145,8 @@ def calculator(equation):
             return float(equation[:index]) * float(equation[index+1:])
         if equation[index] == '/':
             return float(equation[:index]) / float(equation[index+1:])
+        if equation[index] == '%':
+            return float(equation[:index]) % float(equation[index+1:])
     return equation
 
 if __name__ == '__main__':
