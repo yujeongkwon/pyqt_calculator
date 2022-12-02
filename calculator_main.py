@@ -17,6 +17,7 @@ class Main(QDialog):
         ### 수식 입력과 답 출력을 위한 LineEdit 생성
         self.lineEdit = QLineEdit("")
         self.equation=""
+
         ### layout_lineEdit 레이아웃에 LineEdit위젯을 추가
         layout_lineEdit.addRow(self.lineEdit)
 
@@ -132,7 +133,7 @@ class Main(QDialog):
 
     def button_clearEntry_clicked(self):
         equation = self.equation
-        if not equation.replace('.','').isdigit():
+        if not isOnlyNumeric(equation):
             index = search_operator(equation)
             self.equation = equation[:index+1]
         else:
@@ -146,7 +147,7 @@ class Main(QDialog):
 
     def button_inverse_clicked(self):
         equation = self.equation
-        if not equation.replace('.','').isdigit():
+        if not isOnlyNumeric(equation):
             index = search_operator(equation)
             self.equation = equation[:index+1] + str(1 / float(equation[index+1:]))
             equation = str(1 / float(equation[index+1:]))
@@ -160,10 +161,10 @@ class Main(QDialog):
 
     def button_square_clicked(self):
         equation = self.equation
-        if not equation.replace('.','').isdigit():
+        if not isOnlyNumeric(equation):
             index = search_operator(equation)
             self.equation = equation[:index+1] + str(math.pow(float(equation[index+1:]), 2))
-            equation = str(1 / float(equation[index+1:]))
+            equation = str(math.pow(float(equation[index+1:]), 2))
         else:
             if len(equation) > 0:
                 self.equation = str(math.pow(float(equation), 2))
@@ -173,7 +174,7 @@ class Main(QDialog):
         self.lineEdit.setText(equation)
 
 def calculator(equation):
-    if not equation.replace('.','').isdigit():
+    if not isOnlyNumeric(equation):
         index = search_operator(equation)
         if equation[index] == '+':
             return float(equation[:index]) + float(equation[index+1:])
@@ -189,9 +190,21 @@ def calculator(equation):
 
 def search_operator(equation):
     index = 0
+    if equation[0] == '-':
+        index = 1
     while equation[index].isdigit() or equation[index] == '.':
         index += 1
     return index
+
+def isOnlyNumeric(equation):
+    operator = ["+","-","x","÷","%"]
+    if equation[0] == '-':
+        equation = equation[1:]
+
+    for exp in operator:
+        if exp in equation:
+            return False
+    return True
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
