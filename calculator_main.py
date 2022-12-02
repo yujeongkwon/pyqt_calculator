@@ -132,9 +132,7 @@ class Main(QDialog):
     def button_clearEntry_clicked(self):
         equation = self.equation
         if not equation.isdigit():
-            index = 0
-            while equation[index].isdigit() or equation[index] == '.':
-                index += 1
+            index = search_operator(equation)
             self.equation = equation[:index+1]
         else:
             self.equation = ""
@@ -147,9 +145,7 @@ class Main(QDialog):
 
 def calculator(equation):
     if not equation.isdigit():
-        index = 0
-        while equation[index].isdigit() or equation[index] == '.':
-            index += 1
+        index = search_operator(equation)
         if equation[index] == '+':
             return float(equation[:index]) + float(equation[index+1:])
         if equation[index] == '-':
@@ -161,6 +157,12 @@ def calculator(equation):
         if equation[index] == '%':
             return float(equation[:index]) % float(equation[index+1:])
     return equation
+
+def search_operator(equation):
+    index = 0
+    while equation[index].isdigit() or equation[index] == '.':
+        index += 1
+    return index
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
