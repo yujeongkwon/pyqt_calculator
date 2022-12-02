@@ -41,7 +41,7 @@ class Main(QDialog):
         ### 추가 연산 버튼을 클릭했을 때, 각 추가연산 부호가 작동할수 있도록 시그널 설정
         button_rest.clicked.connect(lambda state, operation = "%": self.button_operation_clicked(operation))
         button_clearEntry.clicked.connect(self.button_clearEntry_clicked)
-
+        button_inverse.clicked.connect(self.button_inverse_clicked)
 
         ### 사칙연산 버튼을 layout_button 레이아웃에 추가
         layout_button.addWidget(button_plus,4,3)
@@ -141,6 +141,20 @@ class Main(QDialog):
     def button_backspace_clicked(self):
         equation = self.lineEdit.text()
         equation = equation[:-1]
+        self.lineEdit.setText(equation)
+
+    def button_inverse_clicked(self):
+        equation = self.equation
+        if not equation.isdigit():
+            index = search_operator(equation)
+            self.equation = equation[:index+1] + str(1 / float(equation[index+1:]))
+            equation = str(1 / float(equation[index+1:]))
+        else:
+            if len(equation) > 0:
+                self.equation = str(1 / float(equation))
+            else:
+                self.equation = "0"
+            equation = self.equation
         self.lineEdit.setText(equation)
 
 def calculator(equation):
